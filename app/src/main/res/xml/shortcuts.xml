@@ -7,9 +7,9 @@
         android:shortcutLongLabel="@string/shortcut_continue_long_label"
         android:shortcutShortLabel="@string/shortcut_continue_short_label">
         <intent
-            android:action="org.sunsetware.phocid.CONTINUE"
-            android:targetClass="org.sunsetware.phocid.MainActivity"
-            android:targetPackage="org.sunsetware.phocid" />
+            android:action="org.cpuoff.cetacid.CONTINUE"
+            android:targetClass="org.cpuoff.cetacid.MainActivity"
+            android:targetPackage="org.cpuoff.cetacid" />
     </shortcut>
     <shortcut
         android:enabled="true"
@@ -18,8 +18,8 @@
         android:shortcutLongLabel="@string/shortcut_shuffle_long_label"
         android:shortcutShortLabel="@string/shortcut_shuffle_short_label">
         <intent
-            android:action="org.sunsetware.phocid.SHUFFLE"
-            android:targetClass="org.sunsetware.phocid.MainActivity"
-            android:targetPackage="org.sunsetware.phocid" />
+            android:action="org.cpuoff.cetacid.SHUFFLE"
+            android:targetClass="org.cpuoff.cetacid.MainActivity"
+            android:targetPackage="org.cpuoff.cetacid" />
     </shortcut>
 </shortcuts>

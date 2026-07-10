@@ -10,15 +10,15 @@ plugins {
 }
 
 android {
-    namespace = "org.sunsetware.phocid"
+    namespace = "org.cpuoff.cetacid"
     compileSdk = 36
 
     defaultConfig {
-        applicationId = "org.sunsetware.phocid"
+        applicationId = "org.cpuoff.cetacid"
         minSdk = 30
         targetSdk = 36
-        versionCode = 20260610
-        versionName = "20260610"
+        versionCode = 20251206
+        versionName = "20251206"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }

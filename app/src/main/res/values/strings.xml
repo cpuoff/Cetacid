@@ -2,8 +2,8 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_copyright" translatable="false">Phocid\nCopyright (C) tjysunset &lt;tjysunset@outlook.com&gt;\n\nThis program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.\n\nThis program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.\n\nYou should have received a copy of the GNU General Public License along with this program. If not, see &lt;https://www.gnu.org/licenses/&gt;.</string>
     <string name="app_license_name" translatable="false">GNU General Public License v3.0 or later</string>
-    <string name="app_name" translatable="false">Phocid</string>
-    <string name="app_url" translatable="false">https://github.com/tjysunset/phocid</string>
+    <string name="app_name" translatable="false">Cetacid</string>
+    <string name="app_url" translatable="false">https://github.com/cpuoff/Cetacid</string>
     <string name="commons_add">Add</string>
     <string name="commons_automatic">Automatic</string>
     <string name="commons_back">Back</string>
@@ -95,7 +95,7 @@
     <string name="playlist_io_select_folder">Select folder</string>
     <string name="playlist_io_sync">Playlist sync</string>
     <string name="playlist_io_sync_help">Playlist sync help</string>
-    <string name="playlist_io_sync_help_body" tools:ignore="TypographyDashes">BACKUP TO ANOTHER LOCATION AND READ THE DOCUMENTATION CAREFULLY BEFORE CONTINUING!\n\nYou can view logs of the last sync from the top bar to debug problems.\n\nSync settings are independent of manual import/export settings, and can be set from the top bar. Modified sync settings will not take effect until the next time both sides have different timestamps, and modifying settings with sync enabled might corrupt your data. Backup and manually rewrite the older side before doing so.\n\nDue to Android limitations, Phocid will not create missing files on your behalf. You can export the playlists to create corresponding files.\n\n“Syncing” overwrites the older side with contents from the newer side, which means:\n• Creating a new playlist to sync from an existing file may overwrite the file with nothing, and vice versa. To add new mappings, use import/export instead to generate playlists and files that have matching “last modified” timestamps and contents.\n• Syncing relies on your files to have a correct “last modified” timestamp. Expect unexpected behavior if the files are modified externally with incorrect timestamps.\n\nNewly created playlists and playlists updated before Phocid v20250219 have an initial timestamp of 1970-01-01. Exported files will have the timestamp of when exporting happens. Exporting a playlist will also update its timestamp.\n\nPhocid is not aware of M3U comments (and by extension, extended directives), and will strip those when syncing. Do not use syncing if your use case requires M3U comments.\n\nSyncing happens when the app gains focus, a playlist changes, or manually requested.</string>
+    <string name="playlist_io_sync_help_body" tools:ignore="TypographyDashes">BACKUP TO ANOTHER LOCATION AND READ THE DOCUMENTATION CAREFULLY BEFORE CONTINUING!\n\nYou can view logs of the last sync from the top bar to debug problems.\n\nSync settings are independent of manual import/export settings, and can be set from the top bar. Modified sync settings will not take effect until the next time both sides have different timestamps, and modifying settings with sync enabled might corrupt your data. Backup and manually rewrite the older side before doing so.\n\nDue to Android limitations, Cetacid will not create missing files on your behalf. You can export the playlists to create corresponding files.\n\n“Syncing” overwrites the older side with contents from the newer side, which means:\n• Creating a new playlist to sync from an existing file may overwrite the file with nothing, and vice versa. To add new mappings, use import/export instead to generate playlists and files that have matching “last modified” timestamps and contents.\n• Syncing relies on your files to have a correct “last modified” timestamp. Expect unexpected behavior if the files are modified externally with incorrect timestamps.\n\nNewly created playlists and playlists updated before Cetacid v20250219 have an initial timestamp of 1970-01-01. Exported files will have the timestamp of when exporting happens. Exporting a playlist will also update its timestamp.\n\nCetacid is not aware of M3U comments (and by extension, extended directives), and will strip those when syncing. Do not use syncing if your use case requires M3U comments.\n\nSyncing happens when the app gains focus, a playlist changes, or manually requested.</string>
     <string name="playlist_io_sync_location">Sync location: {0}</string>
     <string name="playlist_io_sync_location_not_set">Sync location: not set</string>
     <string name="playlist_io_sync_log">Playlist sync log</string>
@@ -274,6 +274,15 @@
     <string name="preferences_treat_embedded_lyrics_as_lrc">Treat embedded lyrics as LRC</string>
     <string name="preferences_ui_scaling">UI scaling</string>
     <string name="preferences_version">Version</string>
+    <string name="preferences_check_update">Check Update</string>
+    <string name="preferences_checking_update">Checking for updates...</string>
+    <string name="preferences_update_available">New version available</string>
+    <string name="preferences_update_available_message">A new version {0} is available. Would you like to update?</string>
+    <string name="preferences_no_update_available">No updates available</string>
+    <string name="preferences_no_update_available_message">You are already using the latest version {0}.</string>
+    <string name="preferences_update_error">Error checking for updates</string>
+    <string name="preferences_update_error_message">Could not check for updates: {0}</string>
+    <string name="preferences_update_button">Update</string>
     <string name="preferences_website">Website</string>
     <string name="preferences_widget_accent_background">Colored background</string>
     <string name="preferences_widget_artwork_background">Artwork background</string>
@@ -373,8 +382,33 @@
     <string name="track_play_next">Play next</string>
     <string name="track_remove_from_queue">Remove from queue</string>
     <string name="track_share">Share</string>
+    <string name="track_delete">Delete file</string>
+    <string name="track_delete_single_dialog_title">Delete file?</string>
+    <string name="track_delete_single_dialog_body">"{0}" will be permanently deleted from your device</string>
+    <string name="track_delete_multiple_dialog_title">Delete {0, plural, one {# file} other {# files}}?</string>
+    <string name="track_delete_multiple_dialog_body">{0, plural, one {# track} other {# tracks}} will be permanently deleted from your device</string>
+    <string name="toast_track_deleted">{0, plural, one {# track} other {# tracks}} deleted</string>
+    <string name="toast_track_delete_failed">Failed to delete {0, plural, one {# track} other {# tracks}}</string>
     <string name="track_view_album">View album “{0}”</string>
     <string name="track_view_artist">View artist “{0}”</string>
+    <string name="track_edit_tags">Edit tags</string>
+    <string name="track_edit_tags_title">Edit tags</string>
+    <string name="track_edit_tags_title_field">Title</string>
+    <string name="track_edit_tags_artist_field">Artist</string>
+    <string name="track_edit_tags_album_field">Album</string>
+    <string name="track_edit_tags_album_artist_field">Album artist</string>
+    <string name="track_edit_tags_genre_field">Genre</string>
+    <string name="track_edit_tags_year_field">Year</string>
+    <string name="track_edit_tags_track_number_field">Track number</string>
+    <string name="track_edit_tags_disc_number_field">Disc number</string>
+    <string name="track_edit_tags_comment_field">Comment</string>
+    <string name="track_edit_tags_lyrics_field">Lyrics</string>
+    <string name="track_edit_tags_cover_art">Cover art</string>
+    <string name="track_edit_tags_change_cover">Change Cover Art</string>
+    <string name="track_edit_tags_save">Save</string>
+    <string name="toast_track_tags_saved">Tags saved successfully</string>
+    <string name="toast_track_tags_save_failed">Failed to save tags: {0}</string>
+    <string name="track_edit_tags_unsupported_format">Tag editing is not supported for this format</string>
     <!-- Settings of how the list is displayed. Unrelated to "view album" etc. -->
     <string name="view_settings">View settings</string>
     <string name="view_settings_grid_size">Grid size</string>

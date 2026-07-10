@@ -1,4 +1,4 @@
-L'objectif de ce projet est de remplacer le lecteur de musique abandonné <a href="https://github.com/kabouzeid/Phonograph">Phonograph</a> avec quelque ajustements personnels. Phocid n'a aucune connection avec le lecteur Phonograph.
+L'objectif de ce projet est de remplacer le lecteur de musique abandonné <a href="https://github.com/kabouzeid/Phonograph">Phonograph</a> avec quelque ajustements personnels. Cetacid n'a aucune connection avec le lecteur Phonograph.
 
 <strong>Caractéristiques</strong>
 

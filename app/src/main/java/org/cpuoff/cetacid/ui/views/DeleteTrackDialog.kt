@@ -1,0 +1,164 @@
+package org.cpuoff.cetacid.ui.views
+
+import android.app.Activity
+import android.content.ContentResolver
+import android.net.Uri
+import android.os.Build
+import android.provider.MediaStore
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.IntentSenderRequest
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Stable
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import org.cpuoff.cetacid.Dialog
+import org.cpuoff.cetacid.MainViewModel
+import org.cpuoff.cetacid.R
+import org.cpuoff.cetacid.data.Track
+import org.cpuoff.cetacid.globals.Strings
+import org.cpuoff.cetacid.ui.components.DialogBase
+import org.cpuoff.cetacid.utils.icuFormat
+
+@Stable
+class DeleteTrackDialog(private val tracks: List<Track>) : Dialog() {
+    @Composable
+    override fun Compose(viewModel: MainViewModel) {
+        val context = LocalContext.current
+        val coroutineScope = rememberCoroutineScope()
+        val uris = remember { tracks.map { it.uri } }
+        val trackIds = remember { tracks.map { it.id }.toSet() }
+        val trackCount = tracks.size
+        val singleTrackTitle = rememberSaveable {
+            tracks.firstOrNull()?.displayTitle ?: ""
+        }
+
+        fun handleDeletionSuccess() {
+            // Remove deleted tracks from play queue
+            val playerManager = viewModel.playerManager
+            val playerState = playerManager.state.value
+            val currentIndex = playerState.currentIndex
+            val currentTrackId = playerState.actualPlayQueue.getOrNull(currentIndex)
+            
+            // Find indices to remove (in reverse order to avoid index shifting issues)
+            val indicesToRemove = playerState.actualPlayQueue
+                .mapIndexedNotNull { index, trackId -> 
+                    if (trackId in trackIds) index else null 
+                }
+                .sortedDescending()
+            
+            // Check if current track is being deleted
+            val isCurrentTrackDeleted = currentTrackId != null && currentTrackId in trackIds
+            
+            // Check if all remaining tracks would be deleted
+            val remainingTracksCount = playerState.actualPlayQueue.size - indicesToRemove.size
+            
+            if (isCurrentTrackDeleted && remainingTracksCount > 0) {
+                // If current track is being deleted and there are remaining tracks, skip to next
+                val nextValidIndex = (currentIndex + 1 until playerState.actualPlayQueue.size)
+                    .firstOrNull { playerState.actualPlayQueue[it] !in trackIds }
+                    ?: (0 until currentIndex)
+                        .firstOrNull { playerState.actualPlayQueue[it] !in trackIds }
+                
+                if (nextValidIndex != null) {
+                    playerManager.seekTo(nextValidIndex)
+                }
+            }
+            
+            // Remove tracks from queue in reverse order
+            for (index in indicesToRemove) {
+                playerManager.removeTrack(index)
+            }
+            
+            // If all tracks were deleted, the queue is now empty and playback will stop automatically
+            
+            viewModel.uiManager.toast(
+                Strings[R.string.toast_track_deleted].icuFormat(trackCount)
+            )
+            // Trigger a library rescan to refresh the track list
+            viewModel.scanLibrary(true)
+        }
+
+        val deleteResultLauncher = rememberLauncherForActivityResult(
+            contract = ActivityResultContracts.StartIntentSenderForResult()
+        ) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                handleDeletionSuccess()
+            } else {
+                viewModel.uiManager.toast(
+                    Strings[R.string.toast_track_delete_failed].icuFormat(trackCount)
+                )
+            }
+            viewModel.uiManager.closeDialog()
+        }
+
+        DialogBase(
+            title = if (trackCount == 1) {
+                Strings[R.string.track_delete_single_dialog_title]
+            } else {
+                Strings[R.string.track_delete_multiple_dialog_title].icuFormat(trackCount)
+            },
+            onConfirm = {
+                coroutineScope.launch {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                        // Android 11+ uses MediaStore.createDeleteRequest
+                        val intentSender = MediaStore.createDeleteRequest(
+                            context.contentResolver,
+                            uris
+                        ).intentSender
+                        deleteResultLauncher.launch(
+                            IntentSenderRequest.Builder(intentSender).build()
+                        )
+                    } else {
+                        // For older Android versions, try direct deletion
+                        val success = withContext(Dispatchers.IO) {
+                            deleteTracksLegacy(context.contentResolver, uris)
+                        }
+                        if (success) {
+                            handleDeletionSuccess()
+                        } else {
+                            viewModel.uiManager.toast(
+                                Strings[R.string.toast_track_delete_failed].icuFormat(trackCount)
+                            )
+                        }
+                        viewModel.uiManager.closeDialog()
+                    }
+                }
+            },
+            onDismiss = { viewModel.uiManager.closeDialog() },
+        ) {
+            Text(
+                if (trackCount == 1) {
+                    Strings[R.string.track_delete_single_dialog_body].icuFormat(singleTrackTitle)
+                } else {
+                    Strings[R.string.track_delete_multiple_dialog_body].icuFormat(trackCount)
+                },
+                modifier = Modifier.padding(horizontal = 24.dp),
+            )
+        }
+    }
+}
+
+private fun deleteTracksLegacy(contentResolver: ContentResolver, uris: List<Uri>): Boolean {
+    var allSucceeded = true
+    for (uri in uris) {
+        try {
+            val rowsDeleted = contentResolver.delete(uri, null, null)
+            if (rowsDeleted == 0) {
+                allSucceeded = false
+            }
+        } catch (e: Exception) {
+            allSucceeded = false
+        }
+    }
+    return allSucceeded
+}

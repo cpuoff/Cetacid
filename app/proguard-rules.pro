@@ -24,7 +24,7 @@
 -dontobfuscate
 
 # Hack to fix VerifyError for Jetpack Compose. This doesn't seem to impact binary size anyway.
--keep class org.sunsetware.phocid.** { *; }
+-keep class org.cpuoff.cetacid.** { *; }
 
 # This library uses reflection.
 -keep class org.jaudiotagger.** { *; }

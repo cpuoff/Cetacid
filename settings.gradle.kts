@@ -20,7 +20,7 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "Phocid"
+rootProject.name = "Cetacid"
 
 include(":app")
 
