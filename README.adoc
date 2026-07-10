@@ -63,8 +63,6 @@ Supports MP3, FLAC, OGG, M4A, MP4, WMA, WAV, AIF, AIFF, and DSF.
 
 == Not Included (intentionally left out)
 
-Cetacid is intentionally offline-only. The following will not be added:
-
 * Internet-dependent features of any kind
 * Lock screen media controls
 * Cloud playback statistics or history
